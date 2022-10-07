@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState , useRef} from 'react'
 
 // multiple props in same file typescript
 // interface IUserNameProps{
@@ -33,31 +33,29 @@ import React, { useEffect, useState } from 'react'
 interface IUserDetailsProps {
   // sum: (a: number, b: number) => number;
   // logMessage: (message: string) => void;
-  onHandleSubmit: (event: React.FormEvent<HTMLFormElement>) => void
+  onHandleSubmit: (event: React.FormEvent<HTMLFormElement>, userDetails:IUserDetails) => void
 }
 interface IUserDetails {
-  userName?: string,
+  userName?: string  ,
   password?: string
 }
 const LoginForm = (props: IUserDetailsProps) => {
-  const [userDetails, setUserDetails] = useState<IUserDetails>()
+  const [userDetails, setUserDetails] = useState<IUserDetails>({userName:"", password:""})
+  const userRef = useRef(null)
+  const passwordRef = useRef(null)
 
   return (
     <>
-      <form onSubmit={(e)=>props.onHandleSubmit(e)}>
+      <form onSubmit={(e)=>props.onHandleSubmit(e, userDetails)}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-          <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-          <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+          <input type="email" className="form-control" ref={userRef} value={userDetails?.userName} name="userName" onChange={(e)=>setUserDetails({...userDetails, [e.target.name] :e.target.value})}></input>
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-          <input type="password" className="form-control" id="exampleInputPassword1" />
+          <label className="form-label">Password</label>
+          <input type="password" className="form-control"  ref={passwordRef}  value={userDetails?.password} name="password" onChange={(e)=>setUserDetails({...userDetails, [e.target.name] :e.target.value})}></input>
         </div>
-        <div className="mb-3 form-check">
-          <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-          <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-        </div>
+
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     </>
